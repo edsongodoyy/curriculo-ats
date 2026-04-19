@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CurrículoATS</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#0C0A08;color:#F0EBE3;font-family:'DM Sans',sans-serif;min-height:100vh}
+header{background:#0C0A08;border-bottom:1px solid #2A2010;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:20px}.logo span{color:#FF6B1A}
+.badge{font-size:11px;padding:5px 12px;border-radius:100px;border:1px solid rgba(255,107,26,.3);color:#FF6B1A;background:rgba(255,107,26,.08)}
+.hero{background:#0C0A08;text-align:center;padding:52px 20px 32px}
+.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#FF6B1A;margin-bottom:14px}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(30px,7vw,60px);font-weight:800;letter-spacing:-2px;line-height:1.05;margin-bottom:14px}
+.hero h1 em{font-style:normal;color:#FF6B1A}
+.hero p{font-size:16px;color:#B0A090;max-width:440px;margin:0 auto;line-height:1.6}
+.stats{display:flex;max-width:540px;margin:28px auto;background:#1A1510;border:1px solid #2A2010;border-radius:14px;overflow:hidden}
+.stat{flex:1;padding:16px 10px;text-align:center;border-right:1px solid #2A2010}
+.stat:last-child{border-right:none}
+.stat-n{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#FF6B1A}
+.stat-l{font-size:10px;color:#7A6A58;text-transform:uppercase;letter-spacing:.7px;margin-top:3px}
+.wrap{max-width:820px;margin:0 auto;padding:0 20px 60px}
+.demo-bar{display:flex;align-items:center;gap:14px;background:rgba(255,176,32,.06);border:1px dashed rgba(255,176,32,.3);border-radius:12px;padding:14px 18px;margin-bottom:16px}
+.demo-bar.on{background:rgba(255,176,32,.1);border-color:rgba(255,176,32,.5)}
+.tgl-wrap{position:relative;flex-shrink:0;cursor:pointer}
+.tgl-wrap input{display:none}
+.tgl-track{width:44px;height:24px;background:#2A2010;border-radius:100px;position:relative;transition:.3s;cursor:pointer}
+.tgl-wrap input:checked+.tgl-track{background:#FFB020}
+.tgl-thumb{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:.3s}
+.tgl-wrap input:checked+.tgl-track .tgl-thumb{left:23px}
+.demo-lbl{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#FFB020}
+.demo-sub{font-size:11px;color:#7A6A58;margin-top:2px}
+.api-row{display:flex;align-items:center;gap:14px;background:#1A1510;border:1px solid #2A2010;border-radius:12px;padding:14px 18px;margin-bottom:16px}
+.api-row.off{opacity:.3;pointer-events:none}
+.api-row label{font-size:11px;color:#7A6A58;display:block;margin-bottom:4px}
+.api-row input{width:100%;background:transparent;border:none;outline:none;font-size:13px;color:#F0EBE3;font-family:monospace}
+.api-row a{font-size:11px;color:#FF6B1A;text-decoration:none;white-space:nowrap}
+.steps-bar{display:flex;background:#1A1510;border:1px solid #2A2010;border-radius:12px;overflow:hidden;margin-bottom:18px}
+.si{flex:1;padding:12px 8px;text-align:center;font-size:11px;color:#5A4A38;border-right:1px solid #2A2010;display:flex;align-items:center;justify-content:center;gap:7px}
+.si:last-child{border-right:none}
+.si.active{color:#FF6B1A;background:rgba(255,107,26,.05)}
+.si.done{color:#F0EBE3}
+.si-n{width:20px;height:20px;border-radius:50%;background:#2A2010;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.si.active .si-n{background:#FF6B1A;color:#000}
+.si.done .si-n{background:rgba(255,107,26,.2);color:#FF6B1A}
+.upload-zone{background:#1A1510;border:2px dashed #2A2010;border-radius:14px;padding:32px 20px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:14px;position:relative;overflow:hidden}
+.upload-zone:hover{border-color:rgba(255,107,26,.4)}
+.upload-zone.has{border-style:solid;border-color:rgba(255,107,26,.4)}
+.upload-zone.off{opacity:.35;pointer-events:none}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.up-icon{font-size:30px;margin-bottom:9px}
+.up-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:5px}
+.up-sub{font-size:12px;color:#7A6A58}
+.file-chip{display:none;align-items:center;gap:10px;background:rgba(255,107,26,.08);border:1px solid rgba(255,107,26,.2);border-radius:10px;padding:10px 14px;margin-top:12px}
+.file-chip.show{display:flex}
+.fc-name{font-size:13px;font-weight:500;color:#FF8040}
+.fc-rm{margin-left:auto;background:none;border:none;color:#7A6A58;cursor:pointer;font-size:16px;padding:0}
+.card{background:#1A1510;border:1px solid #2A2010;border-radius:14px;overflow:hidden;margin-bottom:14px;transition:border-color .2s}
+.card:focus-within{border-color:rgba(255,107,26,.35)}
+.card-head{padding:12px 18px;border-bottom:1px solid #2A2010;display:flex;align-items:center;gap:9px}
+.card-ico{width:26px;height:26px;border-radius:7px;background:rgba(255,107,26,.1);display:flex;align-items:center;justify-content:center;font-size:13px}
+.card-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700}
+.card-sub{font-size:11px;color:#7A6A58;margin-left:auto}
+textarea{width:100%;background:transparent;border:none;outline:none;resize:none;font-family:'DM Sans',sans-serif;font-size:13px;color:#F0EBE3;line-height:1.7;padding:15px 18px;min-height:150px}
+textarea::placeholder{color:#2A2010}
+.sec-ttl{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#5A4A38;margin:20px 0 10px}
+.fmt-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.fmt-card{flex:1;min-width:100px;background:#1A1510;border:2px solid #2A2010;border-radius:12px;padding:13px 14px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:.2s}
+.fmt-card.sel{border-color:#FF6B1A;background:rgba(255,107,26,.05)}
+.fmt-card input{display:none}
+.fmt-ico{font-size:20px}
+.fmt-lbl{font-family:'Syne',sans-serif;font-size:13px;font-weight:700}
+.fmt-desc{font-size:10px;color:#7A6A58;margin-top:2px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.btn-main{flex:1;min-width:200px;background:linear-gradient(135deg,#FF6B1A,#E8300A);color:#fff;border:none;padding:17px 22px;border-radius:12px;font-family:'Syne',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 4px 20px rgba(232,48,10,.3)}
+.btn-main:active{transform:scale(.98)}
+.price-box{background:#1A1510;border:1px solid #2A2010;border-radius:12px;padding:12px 16px;text-align:center}
+.price-v{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#FF6B1A}
+.price-s{font-size:10px;color:#7A6A58;text-transform:uppercase;margin-top:2px}
+.err{display:none;background:rgba(255,45,45,.07);border:1px solid rgba(255,45,45,.2);border-radius:10px;padding:12px 16px;font-size:13px;color:#FF5555;margin-top:12px}
+.err.show{display:block}
+.wa-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:rgba(37,211,102,.06);border:1px solid rgba(37,211,102,.2);border-radius:12px;padding:14px 18px;margin-top:18px}
+.wa-bar a{margin-left:auto;background:#25D366;color:#fff;text-decoration:none;padding:9px 16px;border-radius:9px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;white-space:nowrap}
+.wa-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#B0F0C0}
+.wa-sub{font-size:11px;color:#7A6A58;margin-top:2px}
+.overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.8);align-items:center;justify-content:center;padding:20px}
+.overlay.show{display:flex}
+.modal{background:#1A1510;border:1px solid #2A2010;border-radius:20px;padding:32px;max-width:410px;width:100%;position:relative;animation:up .3s ease}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.modal-x{position:absolute;top:14px;right:14px;background:#2A2010;border:none;color:#7A6A58;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
+.modal h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;letter-spacing:-.5px}
+.modal-desc{font-size:13px;color:#7A6A58;margin-bottom:20px;line-height:1.6}
+.modal-price{background:rgba(255,107,26,.07);border:1px solid rgba(255,107,26,.2);border-radius:12px;padding:16px;text-align:center;margin-bottom:18px}
+.modal-price-v{font-family:'Syne',sans-serif;font-size:38px;font-weight:800;color:#FF6B1A;line-height:1}
+.modal-price-s{font-size:12px;color:#7A6A58;margin-top:4px}
+.modal-items{margin-bottom:20px;display:flex;flex-direction:column;gap:6px}
+.modal-item{font-size:13px;color:#B0A090;display:flex;align-items:center;gap:8px}
+.modal-item::before{content:'✓';color:#FF6B1A;font-weight:700}
+.btn-mp{width:100%;background:#009EE3;color:#fff;border:none;padding:15px;border-radius:12px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:10px}
+.sep{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sep::before,.sep::after{content:'';flex:1;height:1px;background:#2A2010}
+.sep span{font-size:11px;color:#5A4A38}
+.btn-demo-pay{width:100%;background:transparent;border:1px solid #2A2010;color:#7A6A58;padding:12px;border-radius:10px;font-size:13px;cursor:pointer}
+.loader{display:none;text-align:center;padding:56px 20px}
+.loader.show{display:block}
+.spin{width:48px;height:48px;border:3px solid #2A2010;border-top-color:#FF6B1A;border-radius:50%;animation:spin .85s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-t{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:6px}
+.loader-s{font-size:13px;color:#7A6A58;margin-bottom:26px}
+.lsteps{max-width:250px;margin:0 auto;display:flex;flex-direction:column;gap:7px;text-align:left}
+.lst{display:flex;align-items:center;gap:9px;font-size:12px;color:#5A4A38;padding:7px 10px;border-radius:8px}
+.lst.active{color:#FF6B1A;background:rgba(255,107,26,.07)}
+.lst.done{color:#F0EBE3}
+.ldot{width:7px;height:7px;border-radius:50%;background:#2A2010;flex-shrink:0}
+.lst.active .ldot{background:#FF6B1A;animation:blink 1s infinite}
+.lst.done .ldot{background:#FF6B1A}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.result{display:none}
+.result.show{display:block}
+.scores{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px}
+@media(max-width:440px){.scores{grid-template-columns:1fr 1fr}.sc-arr{display:none}}
+.sc{background:#1A1510;border:1px solid #2A2010;border-radius:14px;padding:20px;text-align:center}
+.sc.hi{border-color:rgba(255,107,26,.3);background:rgba(255,107,26,.04)}
+.sc-n{font-family:'Syne',sans-serif;font-size:44px;font-weight:800;line-height:1;margin-bottom:4px}
+.sc-n.bad{color:#FF3030}.sc-n.ok{color:#FFB020}.sc-n.good{color:#FF6B1A}
+.sc-l{font-size:10px;color:#7A6A58;text-transform:uppercase;letter-spacing:1px}
+.sc-arr{font-size:22px;color:#5A4A38;text-align:center}
+.kw-box{background:#1A1510;border:1px solid #2A2010;border-radius:14px;overflow:hidden;margin-bottom:12px}
+.kw-head{padding:11px 17px;border-bottom:1px solid #2A2010;font-family:'Syne',sans-serif;font-size:12px;font-weight:700}
+.kw-body{padding:14px 17px;display:flex;flex-wrap:wrap;gap:7px}
+.kw{padding:4px 11px;border-radius:100px;font-size:11px;font-weight:500}
+.kw.ok{background:rgba(255,107,26,.1);border:1px solid rgba(255,107,26,.22);color:#FF8040}
+.kw.no{background:rgba(255,45,45,.08);border:1px solid rgba(255,45,45,.2);color:#FF5555}
+.tabs{display:flex;gap:4px;background:#1A1510;border:1px solid #2A2010;border-radius:12px;padding:4px;margin-bottom:12px}
+.tab{flex:1;padding:9px 6px;text-align:center;font-size:11px;font-weight:500;color:#5A4A38;border-radius:8px;cursor:pointer;border:none;background:transparent;white-space:nowrap}
+.tab.on{background:linear-gradient(135deg,#FF6B1A,#E8300A);color:#fff;font-weight:700}
+.pane{display:none}.pane.on{display:block}
+.cb{background:#1A1510;border:1px solid #2A2010;border-radius:14px;overflow:hidden;margin-bottom:10px}
+.cb-head{padding:11px 16px;border-bottom:1px solid #2A2010;display:flex;align-items:center;justify-content:space-between}
+.cb-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700}
+.cb-body{padding:16px;font-size:13px;line-height:1.75;white-space:pre-wrap;color:#C0B8A8}
+.btn-cp{background:rgba(255,107,26,.1);border:1px solid rgba(255,107,26,.2);color:#FF6B1A;padding:5px 12px;border-radius:8px;font-size:11px;cursor:pointer}
+.dl-box{background:#1A1510;border:1px solid rgba(255,107,26,.25);border-radius:14px;padding:20px;margin-top:20px}
+.dl-box-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:6px}
+.dl-box-sub{font-size:12px;color:#7A6A58;margin-bottom:16px;line-height:1.5}
+.dl-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn-dl{flex:1;min-width:130px;padding:14px 16px;border-radius:12px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;border:none}
+.btn-dl.pdf{background:linear-gradient(135deg,#FF6B1A,#E8300A);color:#fff}
+.btn-dl.doc{background:#1A4080;color:#fff}
+.btn-dl:active{opacity:.8}
+.btn-restart{margin-top:18px;background:transparent;border:1px solid #2A2010;color:#7A6A58;padding:12px 18px;border-radius:10px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+/* Preview fullscreen */
+.prev-wrap{display:none;position:fixed;inset:0;z-index:200;background:#fff;overflow-y:auto}
+.prev-wrap.show{display:block}
+.prev-bar{position:sticky;top:0;background:#1a1a1a;padding:12px 16px;display:flex;align-items:center;gap:10px;z-index:10}
+.prev-bar-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff;flex:1}
+.btn-shr{background:#FF6B1A;color:#fff;border:none;padding:9px 16px;border-radius:9px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.btn-prt{background:#333;color:#fff;border:none;padding:9px 14px;border-radius:9px;font-family:'Syne',sans-serif;font-size:13px;cursor:pointer}
+.btn-cls-prev{background:none;border:none;color:#aaa;font-size:22px;cursor:pointer;padding:0 4px}
+.prev-body{max-width:700px;margin:20px auto;padding:20px}
+@media print{.prev-bar{display:none}}
+/* Info */
+.info-sec{background:#0C0A08;border-top:1px solid #2A2010;padding:56px 20px}
+.info-inner{max-width:820px;margin:0 auto}
+.info-eye{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#FF6B1A;margin-bottom:12px;font-weight:600}
+.info-h{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,36px);font-weight:800;letter-spacing:-1px;margin-bottom:12px}
+.info-h em{font-style:normal;color:#FF6B1A}
+.info-p{color:#B0A090;font-size:15px;line-height:1.7;max-width:560px;margin-bottom:28px}
+.info-p strong{color:#F0EBE3}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:540px){.grid2{grid-template-columns:1fr}}
+.ig{background:#1A1510;border:1px solid #2A2010;border-radius:14px;padding:20px}
+.ig-ico{font-size:24px;margin-bottom:9px}
+.ig-t{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:6px}
+.ig-d{font-size:13px;color:#7A6A58;line-height:1.6}
+.ba-wrap{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:start}
+@media(max-width:580px){.ba-wrap{grid-template-columns:1fr}.ba-arr{display:none}}
+.ba-arr{font-size:26px;color:#5A4A38;display:flex;align-items:center;justify-content:center;padding-top:48px}
+.ba-card{background:#1A1510;border:1px solid #2A2010;border-radius:14px;overflow:hidden}
+.ba-card.bad{border-color:rgba(255,45,45,.2)}.ba-card.good{border-color:rgba(255,107,26,.25)}
+.ba-head{padding:11px 15px;border-bottom:1px solid #2A2010;font-size:12px;font-weight:700}
+.bad .ba-head{color:#FF5555}.good .ba-head{color:#FF6B1A}
+.ba-body{padding:16px 15px;font-size:12px;line-height:1.65;display:flex;flex-direction:column;gap:8px}
+.ba-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:800}
+.ba-ct{color:#7A6A58;font-size:11px}
+.ba-st{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5A4A38;padding-top:7px;border-top:1px solid #2A2010}
+.ba-tx{color:#A09080;font-size:12px;line-height:1.65}
+.ba-tx .hi{color:#FF8040;font-weight:500}
+.ba-note{border-radius:8px;padding:8px 11px;font-size:11px}
+.ba-note.e{background:rgba(255,45,45,.06);border:1px solid rgba(255,45,45,.15);color:#FF5555}
+.ba-note.s{background:rgba(255,107,26,.06);border:1px solid rgba(255,107,26,.18);color:#FF8040}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Currículo<span>ATS</span></div>
+  <div class="badge">✦ IA + ATS + LinkedIn</div>
+</header>
+
+<div class="hero">
+  <div class="eyebrow">✦ Otimização profissional em segundos</div>
+  <h1>Seu currículo <em>visto</em><br>pelas empresas</h1>
+  <p>Envie seu PDF, cole a vaga. A IA otimiza para ATS e entrega pronto.</p>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-n">75%</div><div class="stat-l">Rejeitados por ATS</div></div>
+  <div class="stat"><div class="stat-n">3x</div><div class="stat-l">Mais entrevistas</div></div>
+  <div class="stat"><div class="stat-n">60s</div><div class="stat-l">Otimização</div></div>
+</div>
+
+<div class="wrap">
+  <div class="demo-bar" id="demoBar">
+    <label class="tgl-wrap">
+      <input type="checkbox" id="demoToggle">
+      <div class="tgl-track"><div class="tgl-thumb"></div></div>
+    </label>
+    <div><div class="demo-lbl">🧪 Modo Demo</div><div class="demo-sub">Testa sem API e sem PDF</div></div>
+  </div>
+
+  <div class="api-row" id="apiRow" style="display:none">
+    <div style="font-size:18px">🔑</div>
+    <div style="flex:1"><label>Chave da API Anthropic</label><input type="password" id="apiKey" placeholder="sk-ant-api03-..."></div>
+    <a href="https://console.anthropic.com" target="_blank">Obter →</a>
+  </div>
+
+  <div class="steps-bar">
+    <div class="si active" id="si1"><div class="si-n">1</div><span>Dados</span></div>
+    <div class="si" id="si2"><div class="si-n">2</div><span>Pagamento</span></div>
+    <div class="si" id="si3"><div class="si-n">3</div><span>Resultado</span></div>
+  </div>
+
+  <div id="inputArea">
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" id="pdfFile" accept=".pdf">
+      <div id="upDefault"><div class="up-icon">📄</div><div class="up-title">Anexe seu Currículo em PDF</div><div class="up-sub">Toque aqui para selecionar · somente PDF</div></div>
+      <div class="file-chip" id="fileChip">
+        <span>📋</span>
+        <div><div class="fc-name" id="fileName">—</div><div style="font-size:11px;color:#7A6A58" id="fileSize">—</div></div>
+        <button class="fc-rm" id="rmBtn">✕</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-ico">🎯</div><div class="card-title">Descrição da Vaga</div><div class="card-sub">Cole o texto</div></div>
+      <textarea id="jobInput" placeholder="Cole aqui a descrição completa da vaga..."></textarea>
+    </div>
+    <div class="sec-ttl">📦 Formato de Entrega</div>
+    <div class="fmt-row">
+      <label class="fmt-card sel" id="fPDF"><input type="radio" name="fmt" value="pdf" checked><div class="fmt-ico">🔴</div><div><div class="fmt-lbl">PDF</div><div class="fmt-desc">Pronto para enviar</div></div></label>
+      <label class="fmt-card" id="fDOC"><input type="radio" name="fmt" value="doc"><div class="fmt-ico">🔵</div><div><div class="fmt-lbl">DOC</div><div class="fmt-desc">Editável no Word</div></div></label>
+      <label class="fmt-card" id="fBOTH"><input type="radio" name="fmt" value="both"><div class="fmt-ico">✨</div><div><div class="fmt-lbl">PDF + DOC</div><div class="fmt-desc">Os dois</div></div></label>
+    </div>
+    <div class="cta-row">
+      <button class="btn-main" id="btnOtimizar">⚡ Otimizar Agora</button>
+      <div class="price-box"><div class="price-v">R$19,90</div><div class="price-s">pagamento único</div></div>
+    </div>
+    <div class="err" id="errBox"></div>
+  </div>
+
+  <div class="loader" id="loader">
+    <div class="spin"></div>
+    <div class="loader-t">Otimizando seu currículo...</div>
+    <div class="loader-s">Isso leva cerca de 30 segundos</div>
+    <div class="lsteps">
+      <div class="lst" id="ls1"><div class="ldot"></div>Lendo o currículo</div>
+      <div class="lst" id="ls2"><div class="ldot"></div>Analisando a vaga</div>
+      <div class="lst" id="ls3"><div class="ldot"></div>Calculando score ATS</div>
+      <div class="lst" id="ls4"><div class="ldot"></div>Reescrevendo para ATS</div>
+      <div class="lst" id="ls5"><div class="ldot"></div>Gerando perfil LinkedIn</div>
+    </div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="sec-ttl">📊 Score ATS</div>
+    <div class="scores">
+      <div class="sc"><div class="sc-n bad" id="scB">—</div><div class="sc-l">Score Atual</div></div>
+      <div class="sc-arr">→</div>
+      <div class="sc hi"><div class="sc-n good" id="scA">—</div><div class="sc-l">Score Otimizado</div></div>
+    </div>
+    <div class="kw-box"><div class="kw-head">🔍 Palavras-chave da Vaga</div><div class="kw-body" id="kwBody"></div></div>
+    <div class="sec-ttl">📋 Resultados</div>
+    <div class="tabs">
+      <button class="tab on" id="tabCv">📄 Currículo</button>
+      <button class="tab" id="tabRs">✍️ Resumo</button>
+      <button class="tab" id="tabLi">💼 LinkedIn</button>
+    </div>
+    <div class="pane on" id="pane-cv">
+      <div class="cb"><div class="cb-head"><div class="cb-title">📄 Currículo Otimizado</div><button class="btn-cp" id="cpCv">Copiar</button></div><div class="cb-body" id="rCv"></div></div>
+    </div>
+    <div class="pane" id="pane-rs">
+      <div class="cb"><div class="cb-head"><div class="cb-title">✍️ Resumo Profissional</div><button class="btn-cp" id="cpSm">Copiar</button></div><div class="cb-body" id="rSm"></div></div>
+      <div class="cb"><div class="cb-head"><div class="cb-title">💡 O que Melhorou</div></div><div class="cb-body" id="rIm"></div></div>
+    </div>
+    <div class="pane" id="pane-li">
+      <div class="cb"><div class="cb-head"><div class="cb-title">🔤 Headline LinkedIn</div><button class="btn-cp" id="cpLh">Copiar</button></div><div class="cb-body" id="rLh"></div></div>
+      <div class="cb"><div class="cb-head"><div class="cb-title">📝 Seção Sobre</div><button class="btn-cp" id="cpLa">Copiar</button></div><div class="cb-body" id="rLa"></div></div>
+      <div class="kw-box"><div class="kw-head">🏷️ Habilidades Recomendadas</div><div class="kw-body" id="rLs"></div></div>
+    </div>
+    <div class="dl-box">
+      <div class="dl-box-title">⬇️ Baixar Currículo Otimizado</div>
+      <div class="dl-box-sub" id="dlSub"></div>
+      <div class="dl-row" id="dlRow"></div>
+    </div>
+    <button class="btn-restart" id="btnRestart">← Otimizar outro currículo</button>
+  </div>
+
+  <div class="wa-bar">
+    <span style="font-size:22px">💬</span>
+    <div><div class="wa-title">Dúvidas? Fale no WhatsApp</div><div class="wa-sub">Respondemos rapidinho</div></div>
+    <a href="https://wa.me/5512988426311" target="_blank">Chamar →</a>
+  </div>
+</div>
+
+<!-- Preview fullscreen -->
+<div class="prev-wrap" id="prevWrap">
+  <div class="prev-bar">
+    <div class="prev-bar-title">📄 Currículo Otimizado</div>
+    <button class="btn-shr" id="btnShr">⬆️ Compartilhar</button>
+    <button class="btn-prt" onclick="window.print()">🖨️</button>
+    <button class="btn-cls-prev" id="btnClsPrev">✕</button>
+  </div>
+  <div class="prev-body" id="prevBody"></div>
+</div>
+
+<!-- Info -->
+<div class="info-sec">
+  <div class="info-inner">
+    <div class="info-eye">⚠️ Por que isso importa</div>
+    <h2 class="info-h">O que é um sistema <em>ATS</em>?</h2>
+    <p class="info-p">ATS significa <strong>Applicant Tracking System</strong> — software que filtra currículos automaticamente. Se o seu não passar pelo ATS, nunca chegará a um humano.</p>
+    <div class="grid2">
+      <div class="ig"><div class="ig-ico">🤖</div><div class="ig-t">Leitura Automática</div><div class="ig-d">O sistema escaneia palavras-chave da vaga. Sem elas, você é reprovado antes de ser visto.</div></div>
+      <div class="ig"><div class="ig-ico">📉</div><div class="ig-t">75% são rejeitados</div><div class="ig-d">Não por falta de qualificação — por falta de formatação e palavras-chave certas.</div></div>
+      <div class="ig"><div class="ig-ico">🏢</div><div class="ig-t">Toda grande empresa usa</div><div class="ig-d">iFood, Nubank, Magalu, bancos e multinacionais. Em vagas com 200+ candidatos, o ATS faz a triagem.</div></div>
+      <div class="ig"><div class="ig-ico">✅</div><div class="ig-t">A solução é simples</div><div class="ig-d">Adaptar o currículo com as palavras-chave certas. Nossa IA faz isso em segundos.</div></div>
+    </div>
+  </div>
+</div>
+<div class="info-sec">
+  <div class="info-inner">
+    <div class="info-eye">🔄 Transformação real</div>
+    <h2 class="info-h">Antes e <em>depois</em> da otimização</h2>
+    <p class="info-p">Veja como um currículo comum se transforma em um que passa pelo ATS e atrai recrutadores.</p>
+    <div class="ba-wrap">
+      <div class="ba-card bad"><div class="ba-head">❌ Antes — Score ATS: 28%</div><div class="ba-body"><div class="ba-name">João Silva</div><div class="ba-ct">joao@email.com | (11) 99999-9999</div><div class="ba-st">OBJETIVO</div><div class="ba-tx">Procuro oportunidade na área de marketing para crescer profissionalmente.</div><div class="ba-st">EXPERIÊNCIA</div><div class="ba-tx">Ajudava na criação de posts. Fazia relatórios. Cuidava do Instagram.</div><div class="ba-st">HABILIDADES</div><div class="ba-tx">Pacote Office, Internet, Comunicativo, Proativo</div><div class="ba-note e">⚠️ Sem palavras-chave, verbos fracos, sem números</div></div></div>
+      <div class="ba-arr">→</div>
+      <div class="ba-card good"><div class="ba-head">✅ Depois — Score ATS: 91%</div><div class="ba-body"><div class="ba-name">João Silva</div><div class="ba-ct">joao@email.com | (11) 99999-9999 | LinkedIn</div><div class="ba-st">RESUMO PROFISSIONAL</div><div class="ba-tx">Profissional de <span class="hi">Marketing Digital</span> com 3 anos em <span class="hi">gestão de redes sociais</span>. Aumento de <span class="hi">engajamento em 40%</span>.</div><div class="ba-st">EXPERIÊNCIA</div><div class="ba-tx"><strong>Assistente de Marketing Digital</strong> | Empresa XYZ | 2022–2024<br>• Gerenciei campanhas, aumentando engajamento em <span class="hi">40%</span><br>• Elaborei relatórios com <span class="hi">Google Analytics</span>, reduzindo CPC em 25%</div><div class="ba-note s">✓ Palavras-chave, verbos de ação, resultados com números</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pagamento -->
+<div class="overlay" id="payModal">
+  <div class="modal">
+    <button class="modal-x" id="btnClosePay">✕</button>
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:16px;margin-bottom:6px">Currículo<span style="color:#FF6B1A">ATS</span></div>
+    <h2>Finalizar pedido</h2>
+    <div class="modal-desc">Otimização completa com análise ATS e sugestões para o LinkedIn.</div>
+    <div class="modal-price"><div class="modal-price-v">R$19,90</div><div class="modal-price-s">pagamento único · entrega imediata</div></div>
+    <div class="modal-items">
+      <div class="modal-item">Currículo reescrito e otimizado para ATS</div>
+      <div class="modal-item">Score ATS antes e depois</div>
+      <div class="modal-item">Análise de palavras-chave da vaga</div>
+      <div class="modal-item">Headline e "Sobre" do LinkedIn</div>
+      <div class="modal-item">Download PDF e DOC</div>
+    </div>
+    <button class="btn-mp" id="btnMP">
+      <svg width="18" height="18" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#fff"/><path d="M8 16.5c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="#009EE3" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16.5" r="3" fill="#009EE3"/></svg>
+      Pagar com Mercado Pago
+    </button>
+    <div class="sep"><span>ou para testes</span></div>
+    <button class="btn-demo-pay" id="btnSimular">🧪 Simular pagamento (demo)</button>
+  </div>
+</div>
+
+<script>
+(function(){
+var pdfText='';
+var RD=null;
+var MP_URL=''; // preenchido dinamicamente pelo backend
+var DEMO={
+  scoreBefore:28,scoreAfter:91,
+  keywordsFound:['Excel','Comunicação','Trabalho em equipe'],
+  keywordsMissing:['Marketing Digital','Google Analytics','Meta Ads','Copywriting','CRM','KPIs'],
+  optimizedResume:'JOÃO SILVA\njoao@email.com | (11) 99999-9999 | linkedin.com/in/joaosilva\n\nRESUMO PROFISSIONAL\nProfissional de Marketing Digital com 3 anos de experiência em gestão de redes sociais e análise de métricas. Histórico comprovado de aumento de engajamento em 40% e crescimento orgânico de audiência.\n\nEXPERIÊNCIA PROFISSIONAL\n\nAssistente de Marketing Digital | Empresa XYZ | Jan 2022 – Dez 2024\n• Gerenciei campanhas no Instagram e LinkedIn aumentando engajamento em 40% em 6 meses\n• Produzi conteúdo estratégico gerando crescimento de 8.000 seguidores orgânicos\n• Elaborei relatórios com Google Analytics e Meta Ads reduzindo CPC em 25%\n• Colaborei com time de vendas contribuindo para aumento de 15% nas conversões\n\nFORMAÇÃO\nBacharelado em Comunicação Social | Universidade Mackenzie | 2021\n\nCOMPETÊNCIAS\nMarketing Digital | Gestão de Redes Sociais | Google Analytics | Meta Ads | Copywriting | CRM | KPIs',
+  professionalSummary:'Profissional de Marketing Digital com 3 anos de experiência em gestão de redes sociais e criação de conteúdo. Especialista em Google Analytics e Meta Ads, com histórico de aumento de engajamento em 40% e crescimento orgânico.',
+  improvements:'1. RESUMO PROFISSIONAL — objetivo genérico substituído por resumo com palavras-chave da vaga.\n\n2. VERBOS DE AÇÃO — "ajudava" virou "gerenciei".\n\n3. NÚMEROS — "+40% engajamento", "8.000 seguidores", "-25% CPC".\n\n4. PALAVRAS-CHAVE — "Google Analytics", "Meta Ads", "KPIs" inseridos naturalmente.',
+  linkedinHeadline:'Assistente de Marketing Digital | Gestão de Redes Sociais | Google Analytics & Meta Ads',
+  linkedinAbout:'Sou profissional de Marketing Digital com 3 anos construindo presença digital para marcas que querem crescer.\n\nDesenvolvei habilidades em gestão de redes sociais, criação de conteúdo e análise de métricas. Trabalho com Google Analytics, Meta Ads e CRM para transformar dados em resultados reais.\n\nNa Empresa XYZ aumentei engajamento em 40% e cresci a base em 8.000 seguidores em menos de um ano.\n\nVamos conversar?',
+  linkedinSkills:['Marketing Digital','Gestão de Redes Sociais','Google Analytics','Meta Ads','Criação de Conteúdo','Copywriting','Canva','CRM','KPIs','Estratégia de Conteúdo']
+};
+
+function g(id){return document.getElementById(id);}
+
+// Events
+g('demoToggle').onchange=function(){toggleDemo(this);};
+g('pdfFile').onchange=handleFile;
+g('rmBtn').onclick=removeFile;
+g('btnOtimizar').onclick=openPay;
+g('btnClosePay').onclick=closePay;
+g('btnMP').onclick=handleMP;
+g('btnSimular').onclick=runDemo;
+g('btnRestart').onclick=restart;
+g('tabCv').onclick=function(){swTab('cv',this);};
+g('tabRs').onclick=function(){swTab('rs',this);};
+g('tabLi').onclick=function(){swTab('li',this);};
+g('cpCv').onclick=function(){cpTxt('rCv',this);};
+g('cpSm').onclick=function(){cpTxt('rSm',this);};
+g('cpLh').onclick=function(){cpTxt('rLh',this);};
+g('cpLa').onclick=function(){cpTxt('rLa',this);};
+g('btnClsPrev').onclick=closePrev;
+g('btnShr').onclick=shareFile;
+document.querySelectorAll('input[name=fmt]').forEach(function(r){r.onchange=function(){selFmt(this);};});
+document.querySelectorAll('.fmt-card').forEach(function(c){c.onclick=function(){var r=this.querySelector('input[type=radio]');if(r){r.checked=true;selFmt(r);}};});
+
+function toggleDemo(cb){
+  g('demoBar').classList.toggle('on',cb.checked);
+  g('apiRow').classList.toggle('off',cb.checked);
+  g('uploadZone').classList.toggle('off',cb.checked);
+}
+
+function handleFile(e){
+  var file=e.target.files&&e.target.files[0];
+  if(!file)return;
+  if(file.type!=='application/pdf'){showErr('Apenas arquivos PDF.');return;}
+  hideErr();
+  g('upDefault').style.display='none';
+  g('fileChip').classList.add('show');
+  g('fileName').textContent=file.name;
+  g('fileSize').textContent=(file.size/1024).toFixed(1)+' KB';
+  g('uploadZone').classList.add('has');
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var bin=ev.target.result;
+      var ex='';
+      var re=/BT[\s\S]*?ET/g;var m;
+      while((m=re.exec(bin))!==null){var inn=m[0].match(/\(([^)]+)\)/g);if(inn)ex+=inn.map(function(s){return s.slice(1,-1);}).join(' ')+' ';}
+      pdfText=ex.length>30?ex:bin.replace(/[^\x20-\x7E\n]/g,' ').replace(/\s{3,}/g,'\n').trim().substring(0,8000);
+    }catch(er){pdfText='Currículo enviado pelo usuário';}
+  };
+  reader.readAsBinaryString(file);
+}
+
+function removeFile(e){
+  if(e){e.preventDefault();e.stopPropagation();}
+  pdfText='';g('pdfFile').value='';
+  g('upDefault').style.display='block';
+  g('fileChip').classList.remove('show');
+  g('uploadZone').classList.remove('has');
+}
+
+function selFmt(radio){
+  document.querySelectorAll('.fmt-card').forEach(function(c){c.classList.remove('sel');});
+  if(radio.closest)radio.closest('.fmt-card').classList.add('sel');
+}
+
+function openPay(){
+  var isDemo=g('demoToggle').checked;
+  if(!isDemo){
+    if(!pdfText){showErr('Anexe seu currículo em PDF primeiro.');return;}
+    if(!g('jobInput').value.trim()){showErr('Cole a descrição da vaga.');return;}
+  }
+  hideErr();
+  g('payModal').classList.add('show');
+}
+function closePay(){g('payModal').classList.remove('show');}
+
+function handleMP(){
+  var isDemo=g('demoToggle').checked;
+  if(isDemo){runDemo();return;}
+
+  // Salva dados no sessionStorage antes de redirecionar para o MP
+  try{
+    sessionStorage.setItem('ats_pdf', pdfText);
+    sessionStorage.setItem('ats_job', g('jobInput').value.trim());
+    sessionStorage.setItem('ats_fmt', document.querySelector('input[name=fmt]:checked').value);
+  }catch(e){}
+
+  // Cria preferência de pagamento no backend
+  g('btnMP').textContent='⏳ Gerando link...';
+  g('btnMP').disabled=true;
+
+  fetch('/api/payment', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({amount:19.90})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.init_point){
+      window.location.href=d.init_point;
+    }else{
+      alert('Erro ao gerar pagamento: '+(d.error||'tente novamente'));
+      g('btnMP').textContent='Pagar com Mercado Pago';
+      g('btnMP').disabled=false;
+    }
+  })
+  .catch(function(e){
+    alert('Erro de conexão: '+e.message);
+    g('btnMP').textContent='Pagar com Mercado Pago';
+    g('btnMP').disabled=false;
+  });
+}
+
+function runDemo(){closePay();startLoader();setTimeout(function(){renderResult(DEMO);},6500);}
+
+// Detecta retorno do Mercado Pago (?status=approved&payment_id=xxx)
+function checkPaymentReturn(){
+  var params=new URLSearchParams(window.location.search);
+  var status=params.get('status');
+  var paymentId=params.get('payment_id')||params.get('collection_id');
+  if(status==='approved'&&paymentId){
+    // Limpa URL
+    window.history.replaceState({},'',window.location.pathname);
+    // Recupera dados salvos antes do redirect
+    var savedPdf='';var savedJob='';var savedFmt='pdf';
+    try{
+      savedPdf=sessionStorage.getItem('ats_pdf')||'';
+      savedJob=sessionStorage.getItem('ats_job')||'';
+      savedFmt=sessionStorage.getItem('ats_fmt')||'pdf';
+      sessionStorage.removeItem('ats_pdf');
+      sessionStorage.removeItem('ats_job');
+      sessionStorage.removeItem('ats_fmt');
+    }catch(e){}
+    if(!savedPdf||!savedJob){
+      showErr('Sessão expirada. Por favor refaça o upload do currículo.');
+      return;
+    }
+    // Seleciona formato correto
+    var fmtRadio=document.querySelector('input[name=fmt][value="'+savedFmt+'"]');
+    if(fmtRadio){fmtRadio.checked=true;selFmt(fmtRadio);}
+    pdfText=savedPdf;
+    g('jobInput').value=savedJob;
+    callOptimize(paymentId,savedPdf,savedJob);
+  }
+}
+
+function callOptimize(paymentId,pdfTxt,jobTxt){
+  closePay();
+  startLoader();
+  fetch('/api/optimize',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({paymentId:paymentId,pdfText:pdfTxt,jobText:jobTxt})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.error){stopLoader();showErr('Erro: '+d.error);return;}
+    setTimeout(function(){renderResult(d);},500);
+  })
+  .catch(function(e){stopLoader();showErr('Erro de conexão: '+e.message);});
+}
+
+// Loader
+function startLoader(){
+  g('inputArea').style.display='none';
+  g('loader').classList.add('show');
+  g('result').classList.remove('show');
+  setStep(2);
+  var ids=['ls1','ls2','ls3','ls4','ls5'];
+  ids.forEach(function(id){g(id).className='lst';});
+  var i=0;var iv=setInterval(function(){
+    if(i>0)g(ids[i-1]).className='lst done';
+    if(i<ids.length){g(ids[i]).className='lst active';i++;}else clearInterval(iv);
+  },1300);
+}
+function stopLoader(){g('loader').classList.remove('show');g('inputArea').style.display='block';setStep(1);}
+
+function renderResult(d){
+  RD=d;
+  g('loader').classList.remove('show');
+  setStep(3);
+  var b=d.scoreBefore;
+  g('scB').textContent=b+'%';
+  g('scB').className='sc-n '+(b<40?'bad':b<65?'ok':'good');
+  g('scA').textContent=d.scoreAfter+'%';
+  var kb=g('kwBody');kb.innerHTML='';
+  (d.keywordsFound||[]).forEach(function(k){var s=document.createElement('span');s.className='kw ok';s.textContent='✓ '+k;kb.appendChild(s);});
+  (d.keywordsMissing||[]).forEach(function(k){var s=document.createElement('span');s.className='kw no';s.textContent='✗ '+k;kb.appendChild(s);});
+  g('rCv').textContent=d.optimizedResume||'';
+  g('rSm').textContent=d.professionalSummary||'';
+  g('rIm').textContent=d.improvements||'';
+  g('rLh').textContent=d.linkedinHeadline||'';
+  g('rLa').textContent=d.linkedinAbout||'';
+  var ls=g('rLs');ls.innerHTML='';
+  (d.linkedinSkills||[]).forEach(function(s){var el=document.createElement('span');el.className='kw ok';el.textContent=s;ls.appendChild(el);});
+  var fmt=document.querySelector('input[name=fmt]:checked').value;
+  var dr=g('dlRow');dr.innerHTML='';
+  g('dlSub').textContent='No iPhone: toque em "Compartilhar" para salvar. No computador: clique para baixar.';
+  if(fmt==='pdf'||fmt==='both'){
+    var bp=document.createElement('button');
+    bp.className='btn-dl pdf';bp.textContent='📄 Ver PDF';
+    bp.onclick=openPrev;dr.appendChild(bp);
+  }
+  if(fmt==='doc'||fmt==='both'){
+    var bd=document.createElement('button');
+    bd.className='btn-dl doc';bd.textContent='📝 Baixar DOC';
+    bd.onclick=dlDOC;dr.appendChild(bd);
+  }
+  g('result').classList.add('show');
+  g('result').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// Build formatted HTML for preview
+function buildHTML(){
+  if(!RD)return'';
+  var lines=(RD.optimizedResume||'').split('\n');
+  var out='';
+  lines.forEach(function(raw,idx){
+    var t=raw.trim();
+    if(!t){out+='<p style="margin:4px 0">&nbsp;</p>';return;}
+    if(idx===0){
+      out+='<h1 style="font-family:Georgia,serif;font-size:22px;font-weight:bold;text-align:center;color:#1a1a1a;margin:0 0 4px">'+esc(t)+'</h1>';
+      out+='<div style="height:2px;background:#C85014;margin:6px 0 10px"></div>';
+    }else if(idx===1&&(t.indexOf('@')>-1||t.indexOf('|')>-1)){
+      out+='<p style="text-align:center;font-size:11px;color:#666;font-family:Arial,sans-serif;margin:0 0 12px">'+esc(t)+'</p>';
+    }else if(isAC(t)&&t.length<60){
+      out+='<div style="margin:14px 0 4px;padding-bottom:3px;border-bottom:1px solid #C85014"><span style="font-size:11px;font-weight:bold;color:#C85014;font-family:Arial,sans-serif;letter-spacing:1px">'+esc(t)+'</span></div>';
+    }else if(t.indexOf('|')>-1&&!isB(t)&&t.length<120){
+      var parts=t.split('|').map(function(p){return p.trim();});
+      out+='<div style="display:flex;justify-content:space-between;flex-wrap:wrap;margin:6px 0 3px;font-family:Arial,sans-serif;font-size:11px"><strong style="color:#1a1a1a">'+esc(parts[0])+'</strong><span style="color:#888">'+esc(parts.slice(1).join(' | '))+'</span></div>';
+    }else if(isB(t)){
+      var bt=t.replace(/^[•\-\*]\s*/,'');
+      out+='<div style="display:flex;gap:8px;margin:3px 0;font-size:11px;color:#333;font-family:Arial,sans-serif;text-align:justify"><span style="color:#C85014;flex-shrink:0">•</span><span>'+esc(bt)+'</span></div>';
+    }else{
+      out+='<p style="margin:3px 0;font-size:11px;color:#333;font-family:Arial,sans-serif;text-align:justify;line-height:1.6">'+esc(t)+'</p>';
+    }
+  });
+  return out;
+}
+
+function openPrev(){
+  g('prevBody').innerHTML=buildHTML();
+  g('prevWrap').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closePrev(){g('prevWrap').classList.remove('show');document.body.style.overflow='';}
+
+function shareFile(){
+  var html=buildHTML();
+  var full='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;max-width:680px;margin:20px auto;padding:20px}@media print{body{margin:0}}</style></head><body>'+html+'</body></html>';
+  var blob=new Blob([full],{type:'text/html'});
+  var file=new File([blob],'curriculo-ats-otimizado.html',{type:'text/html'});
+  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+    navigator.share({files:[file],title:'Currículo ATS Otimizado'}).catch(function(){});
+  }else if(navigator.share){
+    navigator.share({title:'Currículo ATS Otimizado',text:RD?RD.optimizedResume:''}).catch(function(){});
+  }else{
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=url;a.download='curriculo-ats.html';
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},500);
+  }
+}
+
+function dlDOC(){
+  if(!RD)return;
+  var lines=(RD.optimizedResume||'').split('\n');
+  var rtf='{\\rtf1\\ansi\\ansicpg1252\\uc1\\deff0\n{\\fonttbl{\\f0\\froman Calibri;}{\\f1\\fswiss Arial;}}\n{\\colortbl ;\\red200\\green80\\blue20;\\red102\\green102\\blue102;\\red51\\green51\\blue51;\\red26\\green26\\blue26;}\n\\paperw11906\\paperh16838\\margl1440\\margr1440\\margt1440\\margb1440\n';
+  lines.forEach(function(raw,idx){
+    var t=raw.trim();
+    if(!t){rtf+='\\pard\\par\n';return;}
+    if(idx===0){rtf+='\\pard\\qc\\sb160\\sa60{\\f0\\fs40\\b\\cf4 '+ru(t)+'}\\par\n\\pard\\qc\\sb0\\sa80{\\f1\\fs6\\cf1 '+ru('━'.repeat(50))+'}\\par\n';}
+    else if(idx===1&&(t.indexOf('@')>-1||t.indexOf('|')>-1)){rtf+='\\pard\\qc\\sb0\\sa120{\\f1\\fs17\\cf2 '+ru(t)+'}\\par\n';}
+    else if(isAC(t)&&t.length<60){rtf+='\\pard\\ql\\sb180\\sa40\\brdrt\\brdrs\\brdrw10\\brdrcf1{\\f1\\fs19\\b\\cf1 '+ru(t)+'}\\par\n';}
+    else if(t.indexOf('|')>-1&&!isB(t)&&t.length<120){var p=t.split('|').map(function(x){return x.trim();});rtf+='\\pard\\ql\\sb80\\sa40{\\f1\\fs20\\b\\cf4 '+ru(p[0])+'}{\\f1\\fs18\\cf2  |  '+ru(p.slice(1).join(' | '))+'}\\par\n';}
+    else if(isB(t)){rtf+='\\pard\\qj\\li400\\fi-200\\sb40\\sa40{\\f1\\fs19\\cf3 \\bullet\\tab '+ru(t.replace(/^[•\-\*]\s*/,''))+'}\\par\n';}
+    else{rtf+='\\pard\\qj\\sb40\\sa40{\\f1\\fs19\\cf3 '+ru(t)+'}\\par\n';}
+  });
+  rtf+='}';
+  var blob=new Blob([rtf],{type:'application/rtf'});
+  var file=new File([blob],'curriculo-ats.rtf',{type:'application/rtf'});
+  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+    navigator.share({files:[file],title:'Currículo ATS Otimizado'}).catch(function(){});
+  }else{
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=url;a.download='curriculo-ats.rtf';
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},500);
+  }
+}
+
+function isAC(s){return s.trim().length>2&&s.trim()===s.trim().toUpperCase()&&/[A-ZÁÉÍÓÚ]/.test(s);}
+function isB(s){return/^[•\-\*]/.test(s.trim());}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function ru(s){var o='';for(var i=0;i<s.length;i++){var c=s.charCodeAt(i);if(c<128){o+=s[i]==='\\'?'\\\\':s[i]==='{'?'\\{':s[i]==='}'?'\\}':s[i];}else{o+='\\u'+c+'?';}}return o;}
+
+function swTab(name,btn){
+  document.querySelectorAll('.pane').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});
+  g('pane-'+name).classList.add('on');btn.classList.add('on');
+}
+
+function cpTxt(id,btn){
+  var text=g(id).textContent;var orig=btn.textContent;
+  if(navigator.clipboard){navigator.clipboard.writeText(text).then(function(){btn.textContent='Copiado ✓';setTimeout(function(){btn.textContent=orig;},2000);});}
+  else{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);btn.textContent='Copiado ✓';setTimeout(function(){btn.textContent=orig;},2000);}
+}
+
+function setStep(n){
+  ['si1','si2','si3'].forEach(function(id,i){var el=g(id);el.className='si'+(i+1<n?' done':i+1===n?' active':'');});
+}
+
+function showErr(msg){var e=g('errBox');e.textContent=msg;e.classList.add('show');}
+function hideErr(){g('errBox').classList.remove('show');}
+function restart(){RD=null;g('result').classList.remove('show');g('inputArea').style.display='block';setStep(1);window.scrollTo({top:0,behavior:'smooth'});}
+
+// Verifica retorno do Mercado Pago ao carregar a página
+checkPaymentReturn();
+})();
+</script>
+</body>
+</html>
