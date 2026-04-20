@@ -221,7 +221,7 @@ textarea::placeholder{color:#2A2010}
     <div><div class="demo-lbl">🧪 Modo Demo</div><div class="demo-sub">Testa sem API e sem PDF</div></div>
   </div>
 
-  <div class="api-row" id="apiRow" style="display:none">
+  <div class="api-row" id="apiRow">
     <div style="font-size:18px">🔑</div>
     <div style="flex:1"><label>Chave da API Anthropic</label><input type="password" id="apiKey" placeholder="sk-ant-api03-..."></div>
     <a href="https://console.anthropic.com" target="_blank">Obter →</a>
@@ -380,7 +380,7 @@ textarea::placeholder{color:#2A2010}
 (function(){
 var pdfText='';
 var RD=null;
-var MP_URL=''; // preenchido dinamicamente pelo backend
+var MP_URL='';
 var DEMO={
   scoreBefore:28,scoreAfter:91,
   keywordsFound:['Excel','Comunicação','Trabalho em equipe'],
@@ -463,97 +463,15 @@ function openPay(){
   if(!isDemo){
     if(!pdfText){showErr('Anexe seu currículo em PDF primeiro.');return;}
     if(!g('jobInput').value.trim()){showErr('Cole a descrição da vaga.');return;}
+    if(!g('apiKey').value.trim()){showErr('Insira a chave da API Anthropic.');return;}
   }
   hideErr();
   g('payModal').classList.add('show');
 }
 function closePay(){g('payModal').classList.remove('show');}
-
-function handleMP(){
-  var isDemo=g('demoToggle').checked;
-  if(isDemo){runDemo();return;}
-
-  // Salva dados no sessionStorage antes de redirecionar para o MP
-  try{
-    sessionStorage.setItem('ats_pdf', pdfText);
-    sessionStorage.setItem('ats_job', g('jobInput').value.trim());
-    sessionStorage.setItem('ats_fmt', document.querySelector('input[name=fmt]:checked').value);
-  }catch(e){}
-
-  // Cria preferência de pagamento no backend
-  g('btnMP').textContent='⏳ Gerando link...';
-  g('btnMP').disabled=true;
-
-  fetch('/api/payment', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({amount:19.90})
-  })
-  .then(function(r){return r.json();})
-  .then(function(d){
-    if(d.init_point){
-      window.location.href=d.init_point;
-    }else{
-      alert('Erro ao gerar pagamento: '+(d.error||'tente novamente'));
-      g('btnMP').textContent='Pagar com Mercado Pago';
-      g('btnMP').disabled=false;
-    }
-  })
-  .catch(function(e){
-    alert('Erro de conexão: '+e.message);
-    g('btnMP').textContent='Pagar com Mercado Pago';
-    g('btnMP').disabled=false;
-  });
-}
+function handleMP(){if(MP_URL){window.location.href=MP_URL;}else{alert('Configure MP_URL.\nUse "Simular pagamento" para testar.');}}
 
 function runDemo(){closePay();startLoader();setTimeout(function(){renderResult(DEMO);},6500);}
-
-// Detecta retorno do Mercado Pago (?status=approved&payment_id=xxx)
-function checkPaymentReturn(){
-  var params=new URLSearchParams(window.location.search);
-  var status=params.get('status');
-  var paymentId=params.get('payment_id')||params.get('collection_id');
-  if(status==='approved'&&paymentId){
-    // Limpa URL
-    window.history.replaceState({},'',window.location.pathname);
-    // Recupera dados salvos antes do redirect
-    var savedPdf='';var savedJob='';var savedFmt='pdf';
-    try{
-      savedPdf=sessionStorage.getItem('ats_pdf')||'';
-      savedJob=sessionStorage.getItem('ats_job')||'';
-      savedFmt=sessionStorage.getItem('ats_fmt')||'pdf';
-      sessionStorage.removeItem('ats_pdf');
-      sessionStorage.removeItem('ats_job');
-      sessionStorage.removeItem('ats_fmt');
-    }catch(e){}
-    if(!savedPdf||!savedJob){
-      showErr('Sessão expirada. Por favor refaça o upload do currículo.');
-      return;
-    }
-    // Seleciona formato correto
-    var fmtRadio=document.querySelector('input[name=fmt][value="'+savedFmt+'"]');
-    if(fmtRadio){fmtRadio.checked=true;selFmt(fmtRadio);}
-    pdfText=savedPdf;
-    g('jobInput').value=savedJob;
-    callOptimize(paymentId,savedPdf,savedJob);
-  }
-}
-
-function callOptimize(paymentId,pdfTxt,jobTxt){
-  closePay();
-  startLoader();
-  fetch('/api/optimize',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({paymentId:paymentId,pdfText:pdfTxt,jobText:jobTxt})
-  })
-  .then(function(r){return r.json();})
-  .then(function(d){
-    if(d.error){stopLoader();showErr('Erro: '+d.error);return;}
-    setTimeout(function(){renderResult(d);},500);
-  })
-  .catch(function(e){stopLoader();showErr('Erro de conexão: '+e.message);});
-}
 
 // Loader
 function startLoader(){
@@ -708,9 +626,6 @@ function setStep(n){
 function showErr(msg){var e=g('errBox');e.textContent=msg;e.classList.add('show');}
 function hideErr(){g('errBox').classList.remove('show');}
 function restart(){RD=null;g('result').classList.remove('show');g('inputArea').style.display='block';setStep(1);window.scrollTo({top:0,behavior:'smooth'});}
-
-// Verifica retorno do Mercado Pago ao carregar a página
-checkPaymentReturn();
 })();
 </script>
 </body>
